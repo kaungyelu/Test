@@ -1943,6 +1943,6 @@ if __name__ == "__main__":
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND & filters.Regex(r'^[\u1000-\u109F\s]+$'), handle_menu_selection))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, comza_text))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-
+    PORT = int(os.environ.get('PORT', 10000))
     logger.info("🚀 Bot is starting...")
     app.run_polling()
