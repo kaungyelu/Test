@@ -1876,9 +1876,8 @@ async def datedelete_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE)
     except Exception as e:
         logger.error(f"Error in datedelete_confirm: {str(e)}")
         await query.edit_message_text("❌ Error occurred")
-        
+
 if __name__ == "__main__":
-    TOKEN = os.getenv("BOT_TOKEN")
     if not TOKEN:
         raise ValueError("❌ BOT_TOKEN environment variable is not set")
         
@@ -1896,7 +1895,7 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("comandza", comandza))
     app.add_handler(CommandHandler("total", total))
     app.add_handler(CommandHandler("tsent", tsent))
-    app.add_handler(CommandHandler("alldata", alldata))
+    app.add_handler(CommandHandler("alldata", alldata))  # Updated with Add User
     app.add_handler(CommandHandler("reset", reset_data))
     app.add_handler(CommandHandler("posthis", posthis))
     app.add_handler(CommandHandler("dateall", dateall))
@@ -1905,6 +1904,7 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("numclose", numclose))
 
     # ================= Callback Handlers =================
+    # Existing callbacks
     app.add_handler(CallbackQueryHandler(comza_input, pattern=r"^comza:"))
     app.add_handler(CallbackQueryHandler(delete_bet, pattern=r"^delete:"))
     app.add_handler(CallbackQueryHandler(confirm_delete, pattern=r"^confirm_delete:"))
@@ -1934,20 +1934,15 @@ if __name__ == "__main__":
     # ================= Add User System =================
     app.add_handler(CallbackQueryHandler(add_user_callback, pattern=r"^add_user$"))
     app.add_handler(MessageHandler(
-        filters.TEXT & ~filters.COMMAND & filters.Regex(r'^[^@]+@\d+@\d+$'),
+        filters.TEXT & ~filters.COMMAND & filters.Regex(r'^[^@]+@\d+@\d+$'),  # Format: Name/Com/Za
         handle_new_user
     ))
+
 
     # ================= Message Handlers =================
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND & filters.Regex(r'^[\u1000-\u109F\s]+$'), handle_menu_selection))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, comza_text))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
-    # Railway ပေါ်မှာအလုပ်လုပ်ဖို့
-    import os
-    PORT = int(os.environ.get('PORT', 10000))
-    
-    print("🚀 Bot is starting ...")
-    
-    # Webhook မသုံးတော့ဘူး၊ polling ပဲသုံးမယ်
+    logger.info("🚀 Bot is starting...")
     app.run_polling()
